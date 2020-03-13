@@ -30,10 +30,9 @@ export function* signIn({ payload }) {
   } catch ({ response }) {
     console.log(response.data);
   }
-  {
-    toast.error('Falha na autenticação, verifique seus dados!');
-    yield put(signInFailure());
-  }
+
+  toast.error('Falha na autenticação, verifique seus dados!');
+  yield put(signInFailure());
 }
 
 export function* signUp({ payload }) {
