@@ -1,72 +1,70 @@
 import { Alert } from 'react-native';
-import { all, call, put, takeLatest } from 'redux-saga/effects';
+import { all, takeLatest, call, put } from 'redux-saga/effects';
+
+import { singInSuccess, singFailure } from './actions';
 
 import api from '~/services/api';
 
-import { signInSuccess, signInFailure, signUpFailure } from './actions';
-
-export function* signIn({ payload }) {
-  try {
+export function* singIn({ payload }) {
     const { email, password } = payload;
+    try {
+        const response = yield call(api.post, 'sessions', {
+            email,
+            password,
+        });
 
-    const response = yield call(api.post, 'sessions', {
-      email,
-      password,
-    });
+        const { token, user } = response.data;
 
-    const { token, user } = response.data;
+        if (user.provider) {
+            Alert.alert('Login failure', 'User cannot be a provider');
+            return;
+        }
 
-    if (user.provider) {
-      Alert.alert(
-        'Erro no login',
-        'O usuário não pode ser prestador de serviços',
-      );
-      return;
+        yield put(singInSuccess(token, user));
+
+        // history.push('/dashboard');
+    } catch ({ response }) {
+        Alert.alert('Login failure', response.data.error);
+        yield put(singFailure());
     }
-
-    api.defaults.headers.Authorization = `Bearer ${token}`;
-
-    yield put(signInSuccess(token, user));
-  } catch (error) {
-    console.tron.log(error.response);
-    Alert.alert(
-      'Falha na autenticação',
-      'Houve um erro no login, verique seus dados',
-    );
-    yield put(signInFailure());
-  }
-}
-
-export function* signUp({ payload }) {
-  try {
-    const { name, email, password } = payload;
-
-    yield call(api.post, 'users', {
-      name,
-      email,
-      password,
-    });
-  } catch (error) {
-    Alert.alert(
-      'Falha no cadastro',
-      'Houve um erro no cadastro, verique seus dados',
-    );
-    yield put(signUpFailure());
-  }
 }
 
 export function setToken({ payload }) {
-  if (!payload) return;
+    if (!payload) {
+        return;
+    }
+    const { token } = payload.auth;
 
-  const { token } = payload.auth;
+    if (token) {
+        api.defaults.headers.Authorization = `Bearer ${token}`;
+    }
+}
 
-  if (token) {
-    api.defaults.headers.Authorization = `Bearer ${token}`;
-  }
+export function* singUp({ payload }) {
+    const { name, email, password } = payload;
+
+    try {
+        yield call(api.post, '/users', {
+            name,
+            email,
+            password,
+        });
+
+        Alert.alert('Success', 'User successfuly registered');
+    } catch ({ response }) {
+        Alert.alert('Register failure', response.data.error);
+
+        yield put(singFailure());
+    }
+}
+
+export function singOut() {
+    // history.push('/');
 }
 
 export default all([
-  takeLatest('persist/REHYDRATE', setToken),
-  takeLatest('@auth/SIGN_IN_REQUEST', signIn),
-  takeLatest('@auth/SIGN_UP_REQUEST', signUp),
+    takeLatest('persist/REHYDRATE', setToken),
+    takeLatest('@auth/SING_IN_REQUEST', singIn),
+    takeLatest('@auth/SING_UP_REQUEST', singUp),
+    takeLatest('@auth/SING_OUT', singOut),
 ]);

@@ -1,3 +1,4 @@
+// Atualizar Perfil de Usuario
 export function updateProfileRequest(data) {
   return {
     type: '@user/UPDATE_PROFILE_REQUEST',
@@ -5,6 +6,7 @@ export function updateProfileRequest(data) {
   };
 }
 
+// Atualização realizada com sucesso
 export function updateProfileSuccess(profile) {
   return {
     type: '@user/UPDATE_PROFILE_SUCCESS',
@@ -12,6 +14,7 @@ export function updateProfileSuccess(profile) {
   };
 }
 
+// Atualização de usuario falhou
 export function updateProfileFailure() {
   return {
     type: '@user/UPDATE_PROFILE_REQUEST',

@@ -46,6 +46,7 @@ export default function Notifications() {
     setVisible(!visible);
   }
 
+  // Marcar Notificação como Lida
   async function handleMarkAsRead(id) {
     await api.put(`notifications/${id}`);
 

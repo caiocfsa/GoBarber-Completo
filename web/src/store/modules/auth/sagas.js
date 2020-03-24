@@ -22,6 +22,7 @@ export function* signIn({ payload }) {
       return;
     }
 
+    // Realiza requisição a resposta do tokken do usuario logado
     api.defaults.headers.Authorization = `Bearer ${token}`;
 
     yield put(signInSuccess(token, user));
@@ -31,7 +32,7 @@ export function* signIn({ payload }) {
     console.log(response.data);
   }
 
-  toast.error('Falha na autenticação, verifique seus dados!');
+  toast.error('Falha Na Autenticação, Usuario ou Senha Inválida!');
   yield put(signInFailure());
 }
 

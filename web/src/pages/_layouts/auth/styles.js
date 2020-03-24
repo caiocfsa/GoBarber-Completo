@@ -23,6 +23,7 @@ export const Content = styled.div`
     input {
       background: rgba(0, 0, 0, 0.1);
       border: 0;
+      border-radius: 4px;
       height: 44px;
       padding: 0 15px;
       color: #fff;

@@ -6,6 +6,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 export default createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 
+  /*Criar para todas aplicações tirando os estilos padrao */
   *{
     margin: 0;
     padding: 0;
@@ -22,6 +23,7 @@ export default createGlobalStyle`
   }
 
   body{
+    /* FONTE MAIS ESTILIZADAS */
     -webkit-font-smoothing: antialiased;
   }
 

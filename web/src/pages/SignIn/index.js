@@ -8,6 +8,7 @@ import { signInRequest } from '~/store/modules/auth/actions';
 
 import logo from '~/assets/logo.svg';
 
+// Validação para Login Com Yup
 const schema = Yup.object().shape({
   email: Yup.string()
     .email('Insira um e-mail válido')
